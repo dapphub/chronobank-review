@@ -1,6 +1,18 @@
+This file contains a contract that serves as a unified event emitter for a system.
+
+This is a good pattern, though it is not clear why a library/baseclass pair is used
+when a mixin could accomplish the same goal with less complexity. See event history
+design discussion TODO.
+
+Recommend making note that versions are 1-indexed. This is a good decision because 0 can act as a null ID.
+
     pragma solidity ^0.4.4;
+
+Recommend updating required solc version.
     
     import "Owned.sol";
+
+Needs `"./Owned.sol"` in latest solc.
     
     /**
      * @title Events History universal contract.
@@ -15,7 +27,7 @@
     contract EventsHistory is Owned {
         // Event emitter signature to address with Event definiton mapping.
         mapping(bytes4 => address) public emitters;
-    
+
         // Calling contract address to version mapping.
         mapping(address => uint) public versions;
     
@@ -90,8 +102,11 @@
          */
         function () {
             if (versions[msg.sender] == 0) {
-                return;
+                return; 
             }
+
+Caution, silent return.
+
             // Internal Out Of Gas/Throw: revert this transaction too;
             // Call Stack Depth Limit reached: n/a after HF 4;
             // Recursive Call: safe, all changes already made.

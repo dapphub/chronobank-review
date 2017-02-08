@@ -1,3 +1,7 @@
+`ChronoBankAsset` implementation that takes a fixed fee percentage.
+
+See discussion about viability of this fee model.
+
     pragma solidity ^0.4.4;
     
     import "ChronoBankAsset.sol";
@@ -22,13 +26,26 @@
         /**
          * Allows the call if fee was successfully taken, throws if the call failed in the end.
          */
+
+This modifier is problematic for a number of reasons.
+
         modifier takeFee(address _from, uint _fromValue, address _sender, bool[1] memory _success) {
+
+Note success by reference due to modifier constraints. This hack is sometimes necessary, but here it
+looks more like another side effect of the chosen error conventions
+
             if (_transferFee(_from, _fromValue, _sender)) {
                 _;
                 if (!_success[0] && _subjectToFees(_from, _fromValue)) {
+
+Throw if the inner call "failed" (did not set success reference).
+
                     throw;
                 }
             }
+
+Implicit `return 0x0;` appended to modified function. Careful!
+
         }
     
         /**

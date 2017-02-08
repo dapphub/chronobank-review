@@ -1,3 +1,4 @@
+
     pragma solidity ^0.4.4;
     
     import "Owned.sol";
@@ -34,6 +35,12 @@
      * didn't happen yet.
      */
     contract ChronoBankPlatform is Owned {
+
+Who owns the main ChronoBankPlatform? The migrations scripts do not appear to transfer ownership.
+
+Defining token related structs:
+
+
         // Structure of a particular asset.
         struct Asset {
             uint owner;                       // Asset's owner id.
@@ -56,6 +63,9 @@
             address addr;                    // Current address of the holder.
             mapping(address => bool) trust;  // Addresses that are trusted with recovery proocedure.
         }
+
+Why is a holder abstraction necessary? If you are imposing usage conventions on your users anyway, recovery
+procedures should be contained in the logic of user addresses. TODO "Recoverable" contract
     
         // Iterable mapping pattern is used for holders.
         uint public holdersCount;
@@ -199,6 +209,8 @@
         function owner(bytes32 _symbol) constant returns(address) {
             return holders[assets[_symbol].owner].addr;
         }
+
+Concern about name collision with common "owner" property.
     
         /**
          * Check if specified address has asset owner rights.
@@ -211,6 +223,8 @@
         function isOwner(address _owner, bytes32 _symbol) constant returns(bool) {
             return isCreated(_symbol) && (assets[_symbol].owner == getHolderId(_owner));
         }
+
+More confusing names.
     
         /**
          * Returns asset total supply.
@@ -222,7 +236,8 @@
         function totalSupply(bytes32 _symbol) constant returns(uint) {
             return assets[_symbol].totalSupply;
         }
-    
+   
+ 
         /**
          * Returns asset balance for a particular holder.
          *
@@ -305,11 +320,17 @@
          */
         function _transfer(uint _fromId, uint _toId, uint _value, bytes32 _symbol, string _reference, uint _senderId) internal returns(bool) {
             // Should not allow to send to oneself.
+
+Why not? I think this breaks erc20 semantics
+
             if (_fromId == _toId) {
                 _error("Cannot send to oneself");
                 return false;
             }
             // Should have positive value.
+
+Why? Now I need to make special case logic in my dependent contracts.
+
             if (_value == 0) {
                 _error("Cannot send 0 value");
                 return false;

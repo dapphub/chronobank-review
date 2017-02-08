@@ -1,3 +1,9 @@
+This file is *not* in scope for this review.
+
+The Rewards contract manages token dividends.
+
+Other than relying on valid token implementations, it does not appear logically dependent on the rest of the system.
+
     pragma solidity ^0.4.4;
     
     import {ERC20Interface as Asset} from "ERC20Interface.sol";

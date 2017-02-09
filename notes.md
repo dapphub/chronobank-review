@@ -16,11 +16,6 @@ Methodology
 
 Commit 29f89620085c7292474ea52f166fe912722e43a5 ("audit-head") was cloned and turned into a line-by-line review document, generating one page per Solidity file.
 
-Simple Suggestions
----
-
-* compiler version (and associated fixes e.g. import paths)
-
 Major Concerns
 ---
 
@@ -31,7 +26,9 @@ Major Concerns
 * token abstractions can negate fee - despite not being in scope of review, must suggest to fix to demurrage model
 
 Minor Concerns / Suggestions
+---
 
+* compiler version (and associated fixes e.g. import paths)
 * Use constructors for "permanent init" functions
 * "proxy" term
-
+* When "call safety comments" are necessary - explicit is fine, but only reentry check necessary for typed calls

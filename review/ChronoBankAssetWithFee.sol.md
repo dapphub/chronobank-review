@@ -1,6 +1,8 @@
 `ChronoBankAsset` implementation that takes a fixed fee percentage.
 
-See discussion about viability of this fee model.
+Major readability issues partially stemming from return-on-error and Solidity limitations, see discussion TODO.
+
+Also see discussion about viability of fee-on-transfer.
 
     pragma solidity ^0.4.4;
     
@@ -32,7 +34,8 @@ This modifier is problematic for a number of reasons.
         modifier takeFee(address _from, uint _fromValue, address _sender, bool[1] memory _success) {
 
 Note success by reference due to modifier constraints. This hack is sometimes necessary, but here it
-looks more like another side effect of the chosen error conventions
+looks more like another side effect of the chosen error convention. See EIP discussion - this code can be reduced
+substantially even if you want to keep return-oriented errors.
 
             if (_transferFee(_from, _fromValue, _sender)) {
                 _;
@@ -138,6 +141,9 @@ Implicit `return 0x0;` appended to modified function. Careful!
             if (!_subjectToFees(_feeFrom, _fromValue)) {
                 return true;
             }
+
+Having this check inside of this function seems backwards. Don't call `_transferFee` if address is not subject to fees.
+
             return super._transferFromWithReference(_feeFrom, feeAddress, calculateFee(_fromValue), "Transaction fee", _sender);
         }
     
@@ -156,7 +162,7 @@ Implicit `return 0x0;` appended to modified function. Careful!
                 && feeAddress != _feeFrom
                 && _fromValue != 0;
         }
-    
+
         /**
          * Return fee that needs to be taken based on specified amount.
          *

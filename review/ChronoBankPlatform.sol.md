@@ -329,7 +329,7 @@ Why not? I think this breaks erc20 semantics
             }
             // Should have positive value.
 
-Why? Now I need to make special case logic in my dependent contracts.
+Why? Now user needs to make special case logic in dependent contracts.
 
             if (_value == 0) {
                 _error("Cannot send 0 value");
@@ -470,6 +470,9 @@ Why? Now I need to make special case logic in my dependent contracts.
          */
         function reissueAsset(bytes32 _symbol, uint _value) onlyOwner(_symbol) returns(bool) {
             // Should have positive value.
+
+Why? Now user has to write special case logic in dependent contract.
+
             if (_value == 0) {
                 _error("Cannot reissue 0 value");
                 return false;
@@ -505,11 +508,17 @@ Why? Now I need to make special case logic in my dependent contracts.
          * @return success.
          */
         function revokeAsset(bytes32 _symbol, uint _value) returns(bool) {
+
+"Revoke" is an odd name for this.
+
             // Should have positive value.
             if (_value == 0) {
                 _error("Cannot revoke 0 value");
                 return false;
             }
+
+Suggest removing value==0 check per above
+
             Asset asset = assets[_symbol];
             uint holderId = getHolderId(msg.sender);
             // Should have enough tokens.
@@ -524,6 +533,10 @@ Why? Now I need to make special case logic in my dependent contracts.
             // Recursive Call: safe, all changes already made.
             eventsHistory.emitRevoke(_symbol, _value, _address(holderId));
             _proxyTransferEvent(holderId, 0, _value, _symbol);
+
+Strange that only one emit call uses internal function wrapper. Use wrappers for both, then you can
+put the mutext there without worrying about reentry anywhere else.
+
             return true;
         }
     
@@ -539,6 +552,9 @@ Why? Now I need to make special case logic in my dependent contracts.
          * @return success.
          */
         function changeOwnership(bytes32 _symbol, address _newOwner) onlyOwner(_symbol) returns(bool) {
+
+Suggest rename, "ownernship" very overloaded
+
             Asset asset = assets[_symbol];
             uint newOwnerId = _createHolderId(_newOwner);
             // Should pass ownership to another holder.

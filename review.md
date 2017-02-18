@@ -65,6 +65,40 @@ The results are summarized in this file. "Major" issues are those that we sugges
 List of Issues
 ---
 
+### Fragile error handling due to choice of error conventions
+
+This system uses `return`-oriented error handling, as opposed to `throw`-oriented errors. This has some tradeoffs which are discussed briefly in [EIP140]() TODO, but is ultimately a result of EVM constraints forcing a choice between clear reporting and clear reasoning about state changes.
+
+This is compounded by a few other Solidity and EVM constraints addressesed in EIPs TODO...
+
+For example, modifiers introduce an implicit "return bytes32(0x0)" if control flow reaches the end of the modifier body:
+
+    modifier onlyContractOwner() {
+        if (contractOwner == msg.sender) {
+            _;
+        }
+    }
+
+Another example of how modifiers don't play well with return values, related to EIP TODO:
+
+    modifier takeFee(address _from, uint _fromValue, address _sender, bool[1] memory _success) {
+        if (_transferFee(_from, _fromValue, _sender)) {
+            _;
+            if (!_success[0] && _subjectToFees(_from, _fromValue)) {
+                throw;
+            }
+        }
+    }
+
+The readability problems are not contained to the modifier definition, but add complexity functions that use it:
+
+    function _transferWithReference(address _to, uint _value, string _reference, address _sender, bool[1] memory _success) takeFee(_sender, _value, _sender, _success) internal returns(bool) {
+        _success[0] = super._transferWithReference(_to, _value, _reference, _sender);
+        return _success[0];
+    }
+
+Our suggested course of action is to wait until EIP TODO to make this architecture more manageable.
+
 ### Harmful Special Cases in Basic Token Operations
 
 ERC20 token semantics are not well-defined anywhere, but almost everyone has an intuitive understanding of how tokens "should" behave,

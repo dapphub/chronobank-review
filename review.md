@@ -20,22 +20,22 @@ We did not do any sort of incentive analysis, though we did make comments about 
 
 Officially in scope
 
-Not officially in scope, but reviewed
-
-    ChronoBankAsset.sol
-    ChronoBankAssetInterface.sol
-    ChronoBankAssetProxy.sol
-    ChronoBankAssetProxyInterface.sol
-    ChronoBankAssetWithFee.sol
-    ChronoBankAssetWithFeeProxy.sol
     ChronoBankPlatform.sol
+    ChronoBankAsset.sol
+    ChronoBankAssetWithFee.sol
+    ChronoBankAssetProxy.sol
     ChronoBankPlatformEmitter.sol
+    EventsHistory.sol
+
+Not officially in scope, but had some feedback
+
+    ChronoBankAssetInterface.sol
+    ChronoBankAssetProxyInterface.sol
+    ChronoBankAssetWithFeeProxy.sol
     ChronoMint.sol
     Configurable.sol
     ConvertLib.sol
     ERC20Interface.sol
-    EventsHistory.sol
-    Exchange.sol
     LHT.sol
     LOC.sol
     Managed.sol
@@ -53,6 +53,7 @@ Not officially in scope, but reviewed
 
 Not reviewed
 
+    Exchange.sol
     Rewards.sol
 
 Methodology

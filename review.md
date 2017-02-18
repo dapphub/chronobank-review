@@ -1,0 +1,235 @@
+Disclaimer
+---
+
+* our best attempt to review
+* make note of "scope" section
+* no system is safe until proper verification tools exist - compiler errors are still common
+
+Scope
+---
+
+### No bytecode verification of any kind
+
+We did not verify that any deployed bytecode matches any source files. It is also not yet feasible to verify that the compiler is correct and the output is valid.
+
+### No incentive or business model analysis
+
+We did not do any sort of incentive analysis, though we did make comments about fee-on-transfer monetization viability.
+
+### List of Files
+
+Officially in scope
+
+Not officially in scope, but reviewed
+
+    ChronoBankAsset.sol
+    ChronoBankAssetInterface.sol
+    ChronoBankAssetProxy.sol
+    ChronoBankAssetProxyInterface.sol
+    ChronoBankAssetWithFee.sol
+    ChronoBankAssetWithFeeProxy.sol
+    ChronoBankPlatform.sol
+    ChronoBankPlatformEmitter.sol
+    ChronoMint.sol
+    Configurable.sol
+    ConvertLib.sol
+    ERC20Interface.sol
+    EventsHistory.sol
+    Exchange.sol
+    LHT.sol
+    LOC.sol
+    Managed.sol
+    Migrations.sol
+    Owned.sol
+    Rooted.sol
+    Shareable.sol
+    TIME.sol
+    helpers/
+        ChronoBankPlatformTestable.sol
+        FakeCoin.sol
+        FakeCoin2.sol
+        FakeCoin3.sol
+        Stub.sol
+
+Not reviewed
+
+    Rewards.sol
+
+Methodology
+---
+
+Commit 29f89620085c7292474ea52f166fe912722e43a5 ("audit-head") was cloned and turned into a line-by-line review document, generating one Markdown file per Solidity file.
+The results are summarized in this file. "Major" issues are those that we suggest the team address before any deployment.
+
+List of Issues
+---
+
+### Harmful Special Cases in Basic Token Operations
+
+ERC20 token semantics are not well-defined anywhere, but almost everyone has an intuitive understanding of how tokens "should" behave,
+or when tokens have "special/weird" logic in the standard function calls.
+
+Asset transfer, approval, issuance, revocation, and ownership change logic have special cases that may at first seem to be convenient for consumers, but actually make writing contracts that manipulate your tokens an order of magnitude more complex and potentially dangerous for your users.
+
+These special cases are enough for users to treat these tokens as having "non-standard semantics". 
+
+This is nearly a "critical" issue, if it were not so easy to address by users with a wrapper token.
+
+This is similar to how we see ETH and GNT in wrapped forms when used with token dapps.
+
+See "Token Wrapper Concept" section.
+
+One simple example is a service contract that lets you specify an "optional fee", which could be implemented in a very straightforward way if 0 is a valid fee value.
+
+As a more dangerous and subtle example would be the inintuitive side-effect that if Maker were to accept TIME or LHT into the collateral registry, then users being able to freeze the system by specifying Maker's "vault" as their own liquidation refund address. This is not merely a peculiarity of the Maker system, but a natural consequence of a common assumption about how tokens should behave.
+
+Here are the most recent "bad safety checks" we've identified:
+
+    if (_fromId == _toId) {
+        _error("Cannot send to oneself");
+        return false;
+    }
+
+...
+
+    if (_value == 0) {
+        _error("Cannot send 0 value");
+        return false;
+    }
+
+...
+
+    if (_senderId == _spenderId) {
+        _error("Cannot approve to oneself");
+        return false;
+    }
+
+...
+
+    if (fromId == getHolderId(_to)) {
+        _error("Cannot trust to oneself");
+        return false;
+    }
+
+...
+
+    if (asset.owner == newOwnerId) {
+        _error("Cannot pass ownership to oneself");
+        return false;
+    }
+
+...
+
+    if (_value == 0) {
+        _error("Cannot revoke 0 value");
+        return false;
+    }
+
+...
+
+    if (_value == 0) {
+        _error("Cannot reissue 0 value");
+        return false;
+    }
+
+
+### Fee-on-transfer is hard to use correctly
+
+AssetWithFee transfer logic is even more problematic than the base Asset logic. For example, it simply will not work with any live exchange dapp for the basic use cases.
+As another example, consider this basic "timelock" contract, which is arguably correct, depending on your interpretation of the ERC20 standard:
+
+    contract TimeLock {
+        ERC20 token;
+        Lock[] locks;
+        struct Lock {
+            address owner;
+            uint amount;
+            uint until;
+        }
+        function lock(uint amount, uint until) returns (lock_id) {
+            assert( transferFrom(msg.sender, this, amount) );
+            locks.push(Lock({
+                owner: msg.sender,
+                amount: amount,
+                until: until
+            }));
+        }
+        function unlock(uint lock_id) {
+            assert( locks[lock_id].owner == msg.sender );
+            assert( locks[lock_id].until < block.timestamp );
+            assert( transfer(msg.sender, amount) );
+        }
+    }
+
+Using this with LHT would leave your tokens stuck. Again, users will solve this with a wrapper contract. However, this creates another problem: monetizing the dapp.
+
+### Fee-on-transfer is probably not viable
+
+Although incentive analysis is out of scope of this review, we must suggest switching to a different model for LHT monetization.
+
+LHT users will protect themselves from your fee with a simple token wrapper (and you can't ask or force them to without severly hampering the utility of the token).
+If the intent was to allow this an only enforce the fee when the hours are actually redeemed (ie, only unwrap for the last transfer), this could be made much clearer with some kind of Service contract which is responsible for charging tokens and initiating some off-chain process.
+
+
+One solution is to redesign the system centered around what we call "Warehouse" tokens, which are claims on some token that the custodians do not create themselves, and which extracts rent via decreasing redemption power of tokens. Under this model "Labor Hour Token" would no longer be an appropriate name, but there would still be concept of "Claimable Labor Hours", which can be claimed on demand. 
+
+Because the claim value decays continuosly, there is a continous stream of new tokens available for TIME holders to do with as they wish, representing the different between "available hours" and the decaying "claimable hours".
+
+The "claims" tokens would correlate with the original definition of LHT, but with some fixed penalty representing rent extracted by ChronoBank. 
+
+This is one way of addressing the "arms race" with users that inevitably starts with weak rent models. An implementation of this is available in the [`ds-warehouse`] package.
+
+Another way is to not monetize the LHT float or flow directly, but rather provide services for the ecosystem which can be monetized more easily (access to centralized services) and simply maintain LHT as a public good.
+
+### Potentially dangerous update logic
+
+The token rule update mechanism appears to be correct in that it implements its intended design, but is extremely difficult to analyze for hidden dangers. More concerning is that the ChronoBank team is not confident in it either. 
+
+
+### Holder Abstraction is an Anti-Pattern
+
+"Holder" abstraction is an anti-pattern and may have hidden dangers. The address abstraction allows users to determine their own safety/recovery procedures with the right proxy contracts. If you wish to provide specific recovery logic as a default, consider maintaining a proxy owner type (ie a "uPort Owner") with the rules you want as a reusable building block.
+
+
+### Changes since start of review
+
+There were many changes since we began this review - we only looked at commit 29f8962 from Feb 1st.
+
+Minor Issues
+---
+
+### Many `init` functions could be constructors
+
+An "init" function that locks itself after first use is naturally expressed as a constructor.
+
+### "Proxy" term is heavily overloaded in Ethereum ecosystem
+
+Different teams have different definitions of "proxy", and it nearly always inhibits understanding.
+
+### Update compiler version
+
+There were several solidity updates since the ones specified in minimum versions in these files.
+
+### Call safety checks a little too verbose
+
+Being explicit is fine, but making these 3 notes (and no others) for every type of external call adds more of an illusion of safety than anything else. 
+
+Token Wrapper Concept
+---
+
+A "token wrapper" converts tokens into a well-behaved form. In this case, users would prefer W-TIME over TIME because it has less strange edge cases, and would doubly prefer W-LHT over LHT (in the current design) because it lets them avoid paying fees until the last possible moment.
+
+    contract TokenWrapper is Token {
+        ERC20 wrapped;
+        // _balances(address=>uint) is inherited from Token
+        function deposit(uint amount) {
+            assert( wrapped.transferFrom(msg.sender, this, amount) );
+            _balances[msg.sender] += amount;
+        }
+        function withdraw(uint amount) {
+            assert( _balances[msg.sender] > amount );
+            _balances[msg.sender] -= amount;
+            assert( wrapped.transfer(msg.sender, amount) );
+        }
+    }
+

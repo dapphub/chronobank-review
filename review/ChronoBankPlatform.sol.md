@@ -671,6 +671,9 @@ Suggest rename, "ownernship" very overloaded
                 _error("Cannot approve to oneself");
                 return false;
             }
+
+Why?
+
             assets[_symbol].wallets[_senderId].allowance[_spenderId] = _value;
             // Internal Out Of Gas/Throw: revert this transaction too;
             // Call Stack Depth Limit reached: revert this transaction too;

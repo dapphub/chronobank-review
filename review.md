@@ -212,7 +212,7 @@ Because the claim value decays continuosly, there is a continous stream of new t
 
 The "claims" tokens would correlate with the original definition of LHT, but with some fixed penalty representing rent extracted by ChronoBank. 
 
-This is one way of addressing the "arms race" with users that inevitably starts with weak rent models. An implementation of this is available in the [`ds-warehouse`] package.
+This is one way of addressing the "arms race" with users that inevitably starts with weak rent models. An implementation of this is available in the [`ds-warehouse`](https://github.com/dapphub/ds-warehouse) package.
 
 Another way is to not monetize the LHT float or flow directly, but rather provide services for the ecosystem which can be monetized more easily (access to centralized services) and simply maintain LHT as a public good.
 

@@ -1,3 +1,5 @@
+This file contains a `library` with definitions for event emitters.
+
     pragma solidity ^0.4.4;
     
     import "EventsHistory.sol";

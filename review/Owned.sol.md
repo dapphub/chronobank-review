@@ -1,4 +1,10 @@
+This file contains a variant of the "owned" pattern which requires the recipient to "claim" ownership.
+
+Recommend choosing a different name as "owned" is mostly homesteaded as a primitive with a different interface.
+
     pragma solidity ^0.4.4;
+
+Recommend updating required compiler version.
     
     /**
      * @title Owned contract with safe ownership pass.
@@ -6,6 +12,9 @@
      * Note: all the non constant functions return false instead of throwing in case if state change
      * didn't happen yet.
      */
+
+Generally concerned about not throwing on error, see discussion TODO
+
     contract Owned {
         address public contractOwner;
         address public pendingContractOwner;
@@ -19,6 +28,9 @@
                 _;
             }
         }
+
+Note silent pass-through at end of `onlyContractOwner` modifier. 
+
     
         /**
          * Prepares ownership pass.
@@ -33,6 +45,8 @@
             pendingContractOwner = _to;
             return true;
         }
+
+Note silent return false on modifier fail.
     
         /**
          * Finalize ownership pass.
@@ -50,3 +64,5 @@
             return true;
         }
     }
+
+

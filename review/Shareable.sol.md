@@ -1,3 +1,9 @@
+This is an access control pattern that is "mixed in" to contracts.
+
+It looks OK, but we think keeping the Owned primitive simple and then
+putting the access control logic into the owner contracts (e.g. multisig)
+is the best way to go.
+
     pragma solidity ^0.4.4;
     
     

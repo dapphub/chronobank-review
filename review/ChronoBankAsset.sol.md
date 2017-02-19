@@ -1,4 +1,15 @@
+The `ChronoBankAsset` contract is a base class for token contracts which are used via
+a `ChronoBankAssetProxy`. It allows adding additional assertions or other kinds of business
+logic to extend the default token behavior.
+
+This base implementation simply calls back to the `proxy`. 
+
+The term "proxy" is one of the heavily overloaded terms in the Ethereum ecosystem. This
+is discussed in the overview..
+
     pragma solidity ^0.4.4;
+
+Bump this version.
     
     import "ChronoBankAssetInterface.sol";
     import {ChronoBankAssetProxyInterface as ChronoBankAssetProxy} from "ChronoBankAssetProxyInterface.sol";

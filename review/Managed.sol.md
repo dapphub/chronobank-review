@@ -1,3 +1,9 @@
+"Proxy"-enabled multisig with many hard-coded parameters and an implicit inverted
+dependency on ChronoMint/LOC.
+
+Strongly recommend refactoring to use standard building blocks (multisig, proxy, and owned)
+to achieve the same goal.
+
     pragma solidity ^0.4.4;
     
     import "Configurable.sol";
@@ -16,6 +22,8 @@
         bytes data;
         Operations op;
       }
+
+Bad name - do not confuse transactions and message calls.
     
       function Managed() Shareable(own,required) {
         required = 2;

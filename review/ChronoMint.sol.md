@@ -7,6 +7,9 @@
     
       uint private offeringCompaniesByIndex;
       mapping(uint => address) internal offeringCompanies;
+
+You can use classes as the value type like `mapping(uint => LOC)`, helps with readability
+
       event newLOC(address _from, address _LOC);
     
       function getAddress(uint name) constant returns(address) {
@@ -84,5 +87,8 @@
       {
         throw;
       }
+
+Not necessary, artifact form older compiler
+
     }
     

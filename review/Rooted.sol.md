@@ -1,3 +1,6 @@
+Zeppelin-style "proxy" contract. Looks OK, except it would be nice
+to have a standard for this (ie uPort uses `forward`).
+
     pragma solidity ^0.4.4;
     
     import "Owned.sol";

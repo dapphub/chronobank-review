@@ -67,9 +67,9 @@ List of Issues
 
 ### Fragile error handling due to choice of error conventions
 
-This system uses `return`-oriented error handling, as opposed to `throw`-oriented errors. This has some tradeoffs which are discussed briefly in [EIP140]() TODO, but is ultimately a result of EVM constraints forcing a choice between clear reporting and clear reasoning about state changes.
+This system uses `return`-oriented error handling, as opposed to `throw`-oriented errors. This has some tradeoffs which are discussed briefly in [EIP140](https://github.com/ethereum/eips/issues/140), but is ultimately a result of EVM constraints forcing a choice between clear reporting and clear reasoning about state changes.
 
-This is compounded by a few other Solidity and EVM constraints addressesed in EIPs TODO...
+This is compounded by a few other Solidity and EVM constraints addressesed in [EIP8](https://github.com/ethereum/EIPs/issues/8), [EIP211](https://github.com/ethereum/EIPs/pull/211), and some solidity [issues](https://github.com/ethereum/solidity/issues/49).
 
 For example, modifiers introduce an implicit "return bytes32(0x0)" if control flow reaches the end of the modifier body:
 
@@ -79,7 +79,7 @@ For example, modifiers introduce an implicit "return bytes32(0x0)" if control fl
         }
     }
 
-Another example of how modifiers don't play well with return values, related to EIP TODO:
+Another example of how modifiers don't play well with return values:
 
     modifier takeFee(address _from, uint _fromValue, address _sender, bool[1] memory _success) {
         if (_transferFee(_from, _fromValue, _sender)) {
@@ -90,14 +90,14 @@ Another example of how modifiers don't play well with return values, related to 
         }
     }
 
-The readability problems are not contained to the modifier definition, but add complexity functions that use it:
+The readability problems are not contained to the modifier definition, but add complexity to functions that use it:
 
     function _transferWithReference(address _to, uint _value, string _reference, address _sender, bool[1] memory _success) takeFee(_sender, _value, _sender, _success) internal returns(bool) {
         _success[0] = super._transferWithReference(_to, _value, _reference, _sender);
         return _success[0];
     }
 
-Our suggested course of action is to wait until EIP TODO to make this architecture more manageable.
+Our suggested course of action is to wait until EIPs [140](https://github.com/ethereum/EIPs/pull/211) and [211](https://github.com/ethereum/EIPs/pull/211) are implemented to make this architecture more manageable.
 
 ### Harmful Special Cases in Basic Token Operations
 
@@ -230,8 +230,6 @@ The token rule update mechanism appears to be correct in that it implements its 
 
 There were many changes since we began this review - we only looked at commit 29f8962 from Feb 1st.
 
-Minor Issues
----
 
 ### Many `init` functions could be constructors
 
@@ -240,6 +238,8 @@ An "init" function that locks itself after first use is naturally expressed as a
 ### "Proxy" term is heavily overloaded in Ethereum ecosystem
 
 Different teams have different definitions of "proxy", and it nearly always inhibits understanding.
+In this project, the word "proxy" is used to describe something more like a "ruleset" or "implementation", and
+the thing that is usually named "proxy" is a feature within "Managed".
 
 ### Update compiler version
 
@@ -247,7 +247,7 @@ There were several solidity updates since the ones specified in minimum versions
 
 ### Call safety checks a little too verbose
 
-Being explicit is fine, but making these 3 notes (and no others) for every type of external call adds more of an illusion of safety than anything else. 
+Being explicit is fine, but making these 3 notes (and no others) for every type of external call adds more noise than clarity.
 
 Token Wrapper Concept
 ---

@@ -114,16 +114,13 @@ or when tokens have "special/weird" logic in the standard function calls.
 
 Asset transfer, approval, issuance, revocation, and ownership change logic have special cases that may at first seem to be convenient for consumers, but actually make writing contracts that manipulate your tokens an order of magnitude more complex and potentially dangerous for your users.
 
-These special cases are enough for users to treat these tokens as
-having "non-standard semantics".
+These special cases are enough for users to treat these tokens as having "non-standard semantics."
 
-This would have been a "critical" issue, were it not for the fact that users are able to address it quite easily with a wrapper token.
-
-This is similar to how we see ETH and GNT in wrapped forms when used with token dapps (see "Appendix A: Token Wrapper Concept").
+This would have been a "critical" issue were it not for the fact that users can circumvent it quite easily with a wrapper token (similar to how we see ETH and GNT in wrapped forms when used with token dapps &mdash; see "Appendix A: Token Wrapper Concept").
 
 One simple example is a service contract that lets you specify an "optional fee", which could be implemented in a very straightforward way if 0 is a valid fee value.
 
-As a more dangerous and subtle example would be the inintuitive side-effect that if Maker were to accept TIME or LHT into the collateral registry, then users being able to freeze the system by specifying Maker's "vault" as their own liquidation refund address. This is not merely a peculiarity of the Maker system, but a natural consequence of a common assumption about how tokens should behave.
+As a more dangerous and subtle example would be the unintuitive side effect that if Maker were to accept TIME or LHT into the collateral registry, then users would be able to freeze the system by specifying Maker's "vault" as their own liquidation refund address. This is not merely a peculiarity of the Maker system, but a natural consequence of a common assumption about how tokens should behave.
 
 Here are the most recent "bad safety checks" we've identified:
 

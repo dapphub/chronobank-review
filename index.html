@@ -207,7 +207,7 @@ Using this with LHT would leave your tokens stuck. Again, users will solve this 
 Although incentive analysis is out of scope of this review, we must suggest switching to a different model for LHT monetization.
 
 LHT users will protect themselves from your fee with a simple token wrapper (and you can't ask or force them to without severly hampering the utility of the token).
-If the intent was to allow this an only enforce the fee when the hours are actually redeemed (ie, only unwrap for the last transfer), this could be made much clearer with some kind of Service contract which is responsible for charging tokens and initiating some off-chain process.
+If the intent was to allow this and only enforce the fee when the hours are actually redeemed (i.e., only unwrap for the last transfer), this could be made much clearer with some kind of Service contract which is responsible for charging tokens and initiating some off-chain process.
 
 
 One solution is to redesign the system centered around what we call "Warehouse" tokens, which are claims on some token that the custodians do not create themselves, and which extracts rent via decreasing redemption power of tokens. Under this model "Labor Hour Token" would no longer be an appropriate name, but there would still be concept of "Claimable Labor Hours", which can be claimed on demand. 
@@ -225,12 +225,12 @@ The token rule update mechanism appears to be correct in that it implements its 
 
 ### Holder Abstraction is an Anti-Pattern
 
-"Holder" abstraction is an anti-pattern and may have hidden dangers. The address abstraction allows users to determine their own safety/recovery procedures with the right proxy contracts. If you wish to provide specific recovery logic as a default, consider maintaining a proxy owner type (ie a "uPort Owner") with the rules you want as a reusable building block.
+"Holder" abstraction is an anti-pattern and may have hidden dangers. The address abstraction allows users to determine their own safety/recovery procedures with the right proxy contracts. If you wish to provide specific recovery logic as a default, consider maintaining a proxy owner type (i.e. a "uPort Owner") with the rules you want as a reusable building block.
 
 
 ### Changes since start of review
 
-There were many changes since we began this review - we only looked at commit 29f8962 from Feb 1st.
+There were many changes since we began this review &mdash; we only looked at commit 29f8962 from Feb 1st.
 
 
 ### Many `init` functions could be constructors
@@ -245,7 +245,7 @@ the thing that is usually named "proxy" is a feature within "Managed".
 
 ### Update compiler version
 
-There were several solidity updates since the ones specified in minimum versions in these files.
+There were several Solidity updates since the minimum versions specified in these files.
 
 ### Call safety checks a little too verbose
 

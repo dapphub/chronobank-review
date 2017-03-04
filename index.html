@@ -114,7 +114,7 @@ or when tokens have "special/weird" logic in the standard function calls.
 
 Asset transfer, approval, issuance, revocation, and ownership change logic have special cases that may at first seem to be convenient for consumers, but actually make writing contracts that manipulate your tokens an order of magnitude more complex and potentially dangerous for your users.
 
-These special cases are enough for users to treat these tokens as having "non-standard semantics". This is nearly a "critical" issue, if it were not so easy to address by users with a wrapper token. This is similar to how we see ETH and GNT in wrapped forms when used with token dapps. (See "Token Wrapper Concept" section.)
+These special cases are enough for users to treat these tokens as having "non-standard semantics". This is nearly a "critical" issue, if it were not so easy to address by users with a wrapper token. This is similar to how we see ETH and GNT in wrapped forms when used with token dapps. (See "Appendix A: Token Wrapper Concept".)
 
 One simple example is a service contract that lets you specify an "optional fee", which could be implemented in a very straightforward way if 0 is a valid fee value.
 

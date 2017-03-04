@@ -1,4 +1,5 @@
 html { font: 12pt/1.5 sans-serif; }
 body { margin: auto; padding: 1rem; max-width: 40rem; }
 pre { font-size: 80%; overflow-x: auto; }
+p, pre, h1, h2, h3, h4 { margin: 1.5rem 0; }
 @media (min-width: 1024px) { html { font-size: 16pt; } }

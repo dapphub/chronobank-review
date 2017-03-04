@@ -1,9 +1,9 @@
 Disclaimer
 ---
 
-* our best attempt to review
-* make note of "scope" section
-* no system is safe until proper verification tools exist - compiler errors are still common
+This document is our best attempt to review the Solidity source code for ChronoBank contract system at commit [29f8962](https://github.com/dapphub/chronobank-contracts/tree/29f89620085c7292474ea52f166fe912722e43a5).
+
+It is important to note that no system is safe until proper verification tools exist. Solidity compiler errors are still common.
 
 Scope
 ---
@@ -210,9 +210,7 @@ One solution is to redesign the system centered around what we call "Warehouse" 
 
 Because the claim value decays continuosly, there is a continous stream of new tokens available for TIME holders to do with as they wish, representing the different between "available hours" and the decaying "claimable hours".
 
-The "claims" tokens would correlate with the original definition of LHT, but with some fixed penalty representing rent extracted by ChronoBank. 
-
-This is one way of addressing the "arms race" with users that inevitably starts with weak rent models. An implementation of this is available in the [`ds-warehouse`](https://github.com/dapphub/ds-warehouse) package.
+The "claims" tokens would correlate with the original definition of LHT, but with some fixed penalty representing rent extracted by ChronoBank. This is one way of addressing the "arms race" with users that inevitably starts with weak rent models.
 
 Another way is to not monetize the LHT float or flow directly, but rather provide services for the ecosystem which can be monetized more easily (access to centralized services) and simply maintain LHT as a public good.
 

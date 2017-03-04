@@ -1,9 +1,18 @@
+<!doctype html>
+<meta charset=utf-8>
+<link rel=stylesheet href=index.css>
+<script src=showdown.min.js></script>
+<script id=content type=text>
+
+# Chronobank review
+
 Disclaimer
 ---
 
-* our best attempt to review
-* make note of "scope" section
-* no system is safe until proper verification tools exist - compiler errors are still common
+* Our best attempt to review
+* Make note of "scope" section
+* No system is safe until proper verification tools exist
+* Compiler errors are still common
 
 Scope
 ---
@@ -268,3 +277,5 @@ A "token wrapper" converts tokens into a well-behaved form. In this case, users 
         }
     }
 
+</script>
+<script>document.write(new showdown.Converter().makeHtml(content.innerHTML))</script>

@@ -5,16 +5,18 @@
 <link rel=stylesheet href=index.css>
 <script id=content type=markdown>
 
-# Chronobank review
+# ChronoBank Review
 
-Disclaimer
+#### Nikolai Mushegian, DappHub
+
+DISCLAIMER
 ---
 
 This document is our best attempt to review the Solidity source code for ChronoBank contract system at commit [29f8962](https://github.com/dapphub/chronobank-contracts/tree/29f89620085c7292474ea52f166fe912722e43a5).
 
 It is important to note that no system is safe until proper verification tools exist. Solidity compiler errors are still common.
 
-Scope
+SCOPE
 ---
 
 ### No bytecode verification of any kind
@@ -65,13 +67,13 @@ We did not do any sort of incentive analysis, though we did make comments about 
     Exchange.sol
     Rewards.sol
 
-Methodology
+METHODOLOGY
 ---
 
 Commit 29f89620085c7292474ea52f166fe912722e43a5 ("audit-head") was cloned and turned into a line-by-line review document, generating one Markdown file per Solidity file. These are available [here](https://github.com/dapphub/chronobank-review/tree/master/review).
 The results are summarized in this file.
 
-List of Issues
+LIST OF ISSUES
 ---
 
 ### Fragile error handling due to choice of error conventions
@@ -252,7 +254,7 @@ There were several Solidity updates since the minimum versions specified in thes
 
 Being explicit is fine, but making these 3 notes (and no others) for every type of external call adds more noise than clarity.
 
-Appendix A: Token Wrapper Concept
+APPENDIX A: Token Wrapper Concept
 ---
 
 A "token wrapper" converts tokens into a well-behaved form. In this case, users would prefer W-TIME over TIME because it has less strange edge cases, and would doubly prefer W-LHT over LHT (in the current design) because it lets them avoid paying fees until the last possible moment.

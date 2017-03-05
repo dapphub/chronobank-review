@@ -34,6 +34,7 @@ h4{
 font-family: OpenSans-Semibold;
 font-size: 12px;
 color: #000000;
+margin:0px;
 }
 
 p{
@@ -47,6 +48,8 @@ margin-bottom: 10px;
 pre{
   background: #E2E1EE;
   padding: 20px;
+  margin-top: 0px;
+  margin-bottom: 30px;
 }
 
 code{

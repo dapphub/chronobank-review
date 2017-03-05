@@ -4,14 +4,16 @@ pre { font-size: 80%; overflow-x: auto; }
 @media (min-width: 1024px) { html { font-size: 16pt; } }
 
 h1{
-  font-family: OpenSans-Semibold;
+  font-family: 'Open Sans', sans-serif;
+  font-weight:600;
   font-size: 24px;
   color: #000000;
   text-align: center;
 }
 
 h2{
-  font-family: OpenSans-Semibold;
+  font-family: 'Open Sans', sans-serif;
+  font-weight:600;
   font-size: 18px;
   margin-top:60px;
   margin-bottom:20px;
@@ -25,7 +27,8 @@ h2:after{
 }
 
 h3{
-  font-family: OpenSans-Semibold;
+  font-family: 'Open Sans', sans-serif;
+  font-weight:600;
   font-size: 16px;
   color: #000000;
   margin-top: 50px;
@@ -33,14 +36,15 @@ h3{
 }
 
 h4{
-  font-family: OpenSans-Semibold;
+  font-family: 'Open Sans', sans-serif;
+  font-weight:600;
   font-size: 14px;
   color: #000000;
   margin:0px;
 }
 
 p{
-  font-family: OpenSans;
+  font-family: 'Open Sans', sans-serif;
   font-size: 14px;
   color: #000000;
   margin-top:10px;

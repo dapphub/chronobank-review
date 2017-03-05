@@ -4,47 +4,47 @@ pre { font-size: 80%; overflow-x: auto; }
 @media (min-width: 1024px) { html { font-size: 16pt; } }
 
 h1{
-font-family: OpenSans-Semibold;
-font-size: 22px;
-color: #000000;
-text-align: center;
+  font-family: OpenSans-Semibold;
+  font-size: 24px;
+  color: #000000;
+  text-align: center;
 }
 
 h2{
-font-family: OpenSans-Semibold;
-font-size: 16px;
-margin-top:60px;
-margin-bottom:20px;
-color: #000000;
+  font-family: OpenSans-Semibold;
+  font-size: 18px;
+  margin-top:60px;
+  margin-bottom:20px;
+  color: #000000;
 }
 
 h2:after{
-content:' ';
-display:block;
-border: 1px solid #979797;
+  content:' ';
+  display:block;
+  border: 1px solid #979797;
 }
 
 h3{
-font-family: OpenSans-Semibold;
-font-size: 14px;
-color: #000000;
-margin-top: 30px;
-margin-bottom: 10px;
+  font-family: OpenSans-Semibold;
+  font-size: 16px;
+  color: #000000;
+  margin-top: 30px;
+  margin-bottom: 10px;
 }
 
 h4{
-font-family: OpenSans-Semibold;
-font-size: 12px;
-color: #000000;
-margin:0px;
+  font-family: OpenSans-Semibold;
+  font-size: 14px;
+  color: #000000;
+  margin:0px;
 }
 
 p{
-font-family: OpenSans;
-font-size: 12px;
-color: #000000;
-margin-top:10px;
-margin-bottom: 10px;
+  font-family: OpenSans;
+  font-size: 14px;
+  color: #000000;
+  margin-top:10px;
+  margin-bottom: 10px;
 }
 
 pre{
@@ -55,6 +55,6 @@ pre{
 }
 
 code{
-  font-size: 12px;
+  font-size: 14px;
 }
 

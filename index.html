@@ -12,7 +12,7 @@
 DISCLAIMER
 ---
 
-This document is our best attempt to review the Solidity source code for ChronoBank contract system at commit [29f8962](https://github.com/dapphub/chronobank-contracts/tree/29f89620085c7292474ea52f166fe912722e43a5).
+This document is our best attempt to review the Solidity source code for the ChronoBank contract system at commit [29f8962](https://github.com/dapphub/chronobank-contracts/tree/29f89620085c7292474ea52f166fe912722e43a5). This is not a review of any smart contracts that ChronoBank has deployed to the Ethereum blockchain, as their code has changed since this audit was completed.
 
 It is important to note that no system is safe until proper verification tools exist. Solidity compiler errors are still common.
 
@@ -70,7 +70,7 @@ We did not do any sort of incentive analysis, though we did make comments about 
 METHODOLOGY
 ---
 
-Commit 29f89620085c7292474ea52f166fe912722e43a5 ("audit-head") was cloned and turned into a line-by-line review document, generating one Markdown file per Solidity file. These are available [here](https://github.com/dapphub/chronobank-review/tree/master/review).
+Commit [29f89620085c7292474ea52f166fe912722e43a5](https://github.com/dapphub/chronobank-contracts/tree/29f89620085c7292474ea52f166fe912722e43a5) ("audit-head") was cloned and turned into a line-by-line review document, generating one Markdown file per Solidity file. These are available [on GitHub](https://github.com/dapphub/chronobank-review/tree/master/review).
 The results are summarized in this file.
 
 LIST OF ISSUES
@@ -123,7 +123,7 @@ This would have been a "critical" issue were it not for the fact that users can 
 
 One simple example is a service contract that lets you specify an "optional fee", which could be implemented in a very straightforward way if 0 is a valid fee value.
 
-As a more dangerous and subtle example would be the unintuitive side effect that if Maker were to accept TIME or LHT into the collateral registry, then users would be able to freeze the system by specifying Maker's "vault" as their own liquidation refund address. This is not merely a peculiarity of the Maker system, but a natural consequence of a common assumption about how tokens should behave.
+As a more dangerous and subtle example would be the unintuitive side effect that if a token-holding system like [Maker](http://makerdao.com/) were to accept TIME or LHT into its collateral registry, then users would be able to freeze the system by specifying Maker's "vault" address as their own refund address when transferring colateral out of the system. This is not merely a peculiarity of the Maker system, but a natural consequence of a common assumption about how tokens should behave.
 
 Here are the most recent "bad safety checks" we've identified:
 
@@ -209,17 +209,17 @@ Using this with LHT would leave your tokens stuck. Again, users will solve this 
 
 Although incentive analysis is out of scope of this review, we must suggest switching to a different model for LHT monetization.
 
-LHT users will protect themselves from your fee with a simple token wrapper (and you can't ask or force them to without severly hampering the utility of the token).
-If the intent was to allow this and only enforce the fee when the hours are actually redeemed (i.e., only unwrap for the last transfer), this could be made much clearer with some kind of Service contract which is responsible for charging tokens and initiating some off-chain process.
+LHT users will likely protect themselves from its transfer fee with a simple token wrapper (and you can't prevent them from doing this without severly hampering the utility of the token).
+If the intent was to allow this and only enforce the fee when the hours are actually redeemed (i.e., only remove from the token wrapper for the last transfer to the platform), this could be made much clearer with some kind of Service contract which is responsible for charging tokens and initiating some off-chain process.
 
 
-One solution is to redesign the system centered around what we call "Warehouse" tokens, which are claims on some token that the custodians do not create themselves, and which extracts rent via decreasing redemption power of tokens. Under this model "Labor Hour Token" would no longer be an appropriate name, but there would still be concept of "Claimable Labor Hours", which can be claimed on demand. 
+One solution is to redesign the system centered around what we call "Warehouse" tokens, which are claims on some resource that the custodians do not create themselves, and which extract profit via a decreasing redemption power over time. Under this model "Labor Hour Token" would no longer be an appropriate name, but there would still be concept of "Claimable Labor Hours", which can be claimed on demand. 
 
-Because the claim value decays continuosly, there is a continous stream of new tokens available for TIME holders to do with as they wish, representing the different between "available hours" and the decaying "claimable hours".
+Because the claim value decays continuosly, there is a continous stream of new tokens available for TIME holders to do with as they wish, representing the difference between "available hours" and the decaying "claimable hours".
 
-The "claims" tokens would correlate with the original definition of LHT, but with some fixed penalty representing rent extracted by ChronoBank. This is one way of addressing the "arms race" with users that inevitably starts with weak rent models.
+The "claims" tokens would correlate with the original definition of LHT, but with some fixed cost representing the profit extracted by ChronoBank. This is one way of addressing the "arms race" with users that inevitably starts with weak rent models.
 
-Another way is to not monetize the LHT float or flow directly, but rather provide services for the ecosystem which can be monetized more easily (access to centralized services) and simply maintain LHT as a public good.
+Another way is to not monetize the LHT supply directly, but rather provide services for the ecosystem which can be monetized more easily (access to centralized services) and simply maintain LHT as a public good.
 
 ### Potentially dangerous update logic
 
@@ -228,7 +228,7 @@ The token rule update mechanism appears to be correct in that it implements its 
 
 ### Holder Abstraction is an Anti-Pattern
 
-"Holder" abstraction is an anti-pattern and may have hidden dangers. The address abstraction allows users to determine their own safety/recovery procedures with the right proxy contracts. If you wish to provide specific recovery logic as a default, consider maintaining a proxy owner type (i.e. a "uPort Owner") with the rules you want as a reusable building block.
+The [Holder abstraction](https://github.com/dapphub/chronobank-contracts/blob/4286a71c3ef74c6781b2dc99a24cccb6c9c73a53/contracts/ChronoBankPlatform.sol#L55) is an anti-pattern and may have hidden dangers. The address abstraction allows users to determine their own safety/recovery procedures with the right proxy contracts. If you wish to provide specific recovery logic as a default, consider maintaining a proxy owner type (i.e. a "uPort Owner") with the rules you want as a reusable building block.
 
 
 ### Changes since start of review

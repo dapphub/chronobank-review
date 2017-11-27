@@ -275,4 +275,6 @@ A "token wrapper" converts tokens into a well-behaved form. In this case, users 
 
 </script>
 <script src=showdown.min.js></script>
-<script>document.write(new showdown.Converter().makeHtml(content.innerHTML))</script>
+<script>
+document.write(new showdown.Converter().makeHtml(document.getElementById("content").innerHTML));
+</script>
